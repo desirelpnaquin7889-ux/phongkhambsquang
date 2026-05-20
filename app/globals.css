@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-medical: #0D9488;
+  --color-medical-dark: #115E59;
+  --color-medical-light: #F0FDFA;
+  --color-primary-50: #ECFDF5;
+  --color-primary-100: #D1FAE5;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+@keyframes fadeInUp {
+  0%   { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #374151;
+  margin: 0;
+}
