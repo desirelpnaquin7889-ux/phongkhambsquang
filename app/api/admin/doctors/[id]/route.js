@@ -1,17 +1,17 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireAuth, parseId } from '@/lib/admin-auth';
 
 export async function PATCH(request, { params }) {
   const deny = await requireAuth();
   if (deny) return deny;
-
-  const id = parseId((await params).id);
-  if (!id) return NextResponse.json({ error: 'ID không hợp lệ' }, { status: 400 });
-
-  const { name, specialty, credentials, bio, imageUrl, tags } = await request.json();
-
   try {
+    const id = parseId((await params).id);
+    if (!id) return NextResponse.json({ error: 'ID không hợp lệ' }, { status: 400 });
+
+    const { name, specialty, credentials, bio, imageUrl, tags } = await request.json();
+
     const doctor = await prisma.doctor.update({
       where: { id },
       data: {
@@ -23,8 +23,10 @@ export async function PATCH(request, { params }) {
         tags: JSON.stringify(Array.isArray(tags) ? tags : []),
       },
     });
+    revalidatePath('/');
     return NextResponse.json(doctor);
-  } catch {
+  } catch (err) {
+    console.error('PATCH doctor error:', err);
     return NextResponse.json({ error: 'Không tìm thấy bác sĩ' }, { status: 404 });
   }
 }
@@ -32,14 +34,15 @@ export async function PATCH(request, { params }) {
 export async function DELETE(request, { params }) {
   const deny = await requireAuth();
   if (deny) return deny;
-
-  const id = parseId((await params).id);
-  if (!id) return NextResponse.json({ error: 'ID không hợp lệ' }, { status: 400 });
-
   try {
+    const id = parseId((await params).id);
+    if (!id) return NextResponse.json({ error: 'ID không hợp lệ' }, { status: 400 });
+
     await prisma.doctor.delete({ where: { id } });
+    revalidatePath('/');
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error('DELETE doctor error:', err);
     return NextResponse.json({ error: 'Không tìm thấy bác sĩ' }, { status: 404 });
   }
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/admin-auth';
 
@@ -33,6 +34,7 @@ export async function POST(request) {
         order,
       },
     });
+    revalidatePath('/');
     return NextResponse.json(service, { status: 201 });
   } catch (err) {
     console.error('POST service error:', err);

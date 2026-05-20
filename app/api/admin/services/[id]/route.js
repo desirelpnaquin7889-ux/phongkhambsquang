@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireAuth, parseId } from '@/lib/admin-auth';
 
@@ -20,6 +21,7 @@ export async function PATCH(request, { params }) {
         active: active === true,
       },
     });
+    revalidatePath('/');
     return NextResponse.json(service);
   } catch (err) {
     console.error('PATCH service error:', err);
@@ -35,6 +37,7 @@ export async function DELETE(request, { params }) {
     if (!id) return NextResponse.json({ error: 'ID không hợp lệ' }, { status: 400 });
 
     await prisma.service.delete({ where: { id } });
+    revalidatePath('/');
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('DELETE service error:', err);

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/admin-auth';
 
@@ -43,6 +44,7 @@ export async function PATCH(request) {
       )
     );
 
+    revalidatePath('/');
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('PATCH settings error:', err);
