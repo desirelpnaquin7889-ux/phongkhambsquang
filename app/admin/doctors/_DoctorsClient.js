@@ -102,10 +102,13 @@ export default function DoctorsClient({ initialDoctors }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const saved = await r.json();
-      if (!r.ok) throw new Error(saved.error || 'Lỗi lưu');
+      let saved;
+      try { saved = await r.json(); } catch { throw new Error(`Lỗi server (HTTP ${r.status})`); }
+      if (!r.ok) throw new Error(saved.error || `Lỗi ${r.status}`);
 
-      const normalized = { ...saved, tags: JSON.parse(saved.tags || '[]') };
+      let parsedTags = [];
+      try { parsedTags = JSON.parse(saved.tags || '[]'); } catch { parsedTags = []; }
+      const normalized = { ...saved, tags: parsedTags };
       setDoctors(prev => isEdit ? prev.map(d => d.id === saved.id ? normalized : d) : [...prev, normalized]);
       close();
     } catch (err) {

@@ -20,29 +20,31 @@ function verifyMagicBytes(buffer, mimeType) {
 export async function POST(request) {
   const deny = await requireAuth();
   if (deny) return deny;
+  try {
+    const formData = await request.formData();
+    const file = formData.get('image');
 
-  const formData = await request.formData();
-  const file = formData.get('image');
+    if (!file) return NextResponse.json({ error: 'Không có file' }, { status: 400 });
+    if (!ALLOWED_MIME.includes(file.type)) {
+      return NextResponse.json({ error: 'Chỉ nhận JPG, PNG, WebP, GIF' }, { status: 400 });
+    }
 
-  if (!file) return NextResponse.json({ error: 'Không có file' }, { status: 400 });
-  if (!ALLOWED_MIME.includes(file.type)) {
-    return NextResponse.json({ error: 'Chỉ nhận JPG, PNG, WebP, GIF' }, { status: 400 });
+    const bytes = await file.arrayBuffer();
+
+    if (bytes.byteLength > MAX_BYTES) {
+      return NextResponse.json({ error: 'File tối đa 5 MB' }, { status: 400 });
+    }
+    if (!verifyMagicBytes(bytes, file.type)) {
+      return NextResponse.json({ error: 'File không hợp lệ hoặc bị hỏng' }, { status: 400 });
+    }
+
+    const ext = file.type.split('/')[1].replace('jpeg', 'jpg');
+    const filename = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+    const blob = await put(filename, bytes, { access: 'public' });
+
+    return NextResponse.json({ url: blob.url });
+  } catch (err) {
+    console.error('Upload error:', err);
+    return NextResponse.json({ error: 'Upload thất bại' }, { status: 500 });
   }
-
-  const bytes = await file.arrayBuffer();
-
-  if (bytes.byteLength > MAX_BYTES) {
-    return NextResponse.json({ error: 'File tối đa 5 MB' }, { status: 400 });
-  }
-
-  if (!verifyMagicBytes(bytes, file.type)) {
-    return NextResponse.json({ error: 'File không hợp lệ hoặc bị hỏng' }, { status: 400 });
-  }
-
-  const ext = file.type.split('/')[1].replace('jpeg', 'jpg');
-  const filename = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
-
-  const blob = await put(filename, bytes, { access: 'public' });
-
-  return NextResponse.json({ url: blob.url });
 }

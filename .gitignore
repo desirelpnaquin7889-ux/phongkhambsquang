@@ -57,3 +57,5 @@ next-env.d.ts
 *.png
 contact-form-plan.md
 database-admin.md
+
+.vercel
