@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import BookingForm from './BookingForm';
-import Image from 'next/image';
 
 const SERVICES = [
   { icon: 'ri-heart-pulse-line', name: 'Siêu âm tổng quát', desc: 'Siêu âm bụng, gan, mật, tụy, lách, thận, bàng quang với máy siêu âm 4D thế hệ mới nhất.' },
@@ -57,7 +56,6 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
   useEffect(() => {
     function check() {
       const now = new Date();
-      const day = now.getDay(); // 0=Sun
       const hm = now.getHours() * 60 + now.getMinutes();
       const [oh, om] = openTime.split(':').map(Number);
       const [ch, cm] = closeTime.split(':').map(Number);
@@ -259,13 +257,17 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
               {DOCTORS_DATA.map((d, i) => (
                 <div key={d.name} className="will-anim bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group" data-delay={`${i * 0.12}s`}>
                   <div className="relative aspect-3/4 overflow-hidden">
-                    <Image
-                      src={d.img}
-                      alt={d.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                    />
+                    {d.img ? (
+                      <img
+                        src={d.img}
+                        alt={d.name}
+                        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300">
+                        <i className="ri-user-3-line text-5xl"></i>
+                      </div>
+                    )}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(to top,rgba(0,0,0,.32),transparent)' }}></div>
                   </div>
                   <div className="p-6">

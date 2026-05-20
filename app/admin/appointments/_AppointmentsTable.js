@@ -66,7 +66,11 @@ export default function AppointmentsTable({ appointments: initial, total, status
       if (res.ok) {
         setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
         if (detail?.id === id) setDetail(d => ({ ...d, status: newStatus }));
+      } else {
+        alert('Cập nhật trạng thái thất bại, vui lòng thử lại.');
       }
+    } catch {
+      alert('Không thể kết nối server.');
     } finally {
       setUpdatingId(null);
     }
@@ -81,7 +85,11 @@ export default function AppointmentsTable({ appointments: initial, total, status
         setAppointments(prev => prev.filter(a => a.id !== deleteTarget.id));
         setDeleteTarget(null);
         setDetail(null);
+      } else {
+        alert('Xóa thất bại, vui lòng thử lại.');
       }
+    } catch {
+      alert('Không thể kết nối server.');
     } finally {
       setDeleting(false);
     }
@@ -89,9 +97,11 @@ export default function AppointmentsTable({ appointments: initial, total, status
 
   const totalPages = Math.ceil(total / limit);
   const pageLink = (p) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('page', p);
-    return url.pathname + url.search;
+    const params = new URLSearchParams();
+    if (status && status !== 'all') params.set('status', status);
+    if (search) params.set('search', search);
+    params.set('page', String(p));
+    return `/admin/appointments?${params.toString()}`;
   };
 
   return (

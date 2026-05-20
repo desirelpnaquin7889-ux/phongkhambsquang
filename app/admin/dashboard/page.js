@@ -56,7 +56,7 @@ export default async function DashboardPage() {
           {recentAppts.map(a => (
             <div key={a.id} className="flex items-center gap-4 px-6 py-4">
               <div className="w-9 h-9 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0 text-teal-600 font-semibold text-sm">
-                {a.patientName[0]}
+                {a.patientName?.[0] ?? '?'}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-gray-900 text-sm truncate">{a.patientName}</p>

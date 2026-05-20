@@ -4,7 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 const EMPTY_FORM = { name: '', specialty: '', credentials: '', bio: '', imageUrl: '', tags: '' };
 
 export default function DoctorsClient({ initialDoctors }) {
-  const [doctors, setDoctors] = useState(initialDoctors.map(d => ({ ...d, tags: JSON.parse(d.tags || '[]') })));
+  const [doctors, setDoctors] = useState(initialDoctors.map(d => {
+    let tags = [];
+    try { tags = JSON.parse(d.tags || '[]'); } catch { tags = []; }
+    return { ...d, tags };
+  }));
   const [panel, setPanel] = useState(null); // null | 'new' | doctor-object
   const [form, setForm] = useState(EMPTY_FORM);
   const [preview, setPreview] = useState('');

@@ -11,7 +11,13 @@ export async function PATCH(request, { params }) {
   const id = parseId((await params).id);
   if (!id) return NextResponse.json({ error: 'ID không hợp lệ' }, { status: 400 });
 
-  const { status } = await request.json();
+  let status;
+  try {
+    ({ status } = await request.json());
+  } catch {
+    return NextResponse.json({ error: 'Body không hợp lệ' }, { status: 400 });
+  }
+
   if (!VALID_STATUSES.includes(status)) {
     return NextResponse.json({ error: 'Trạng thái không hợp lệ' }, { status: 400 });
   }

@@ -24,13 +24,11 @@ async function getServices() {
 async function getDoctors() {
   try {
     const rows = await prisma.doctor.findMany({ where: { active: true }, orderBy: { order: 'asc' } });
-    return rows.map(d => ({
-      name: d.name,
-      specialty: d.specialty,
-      bio: d.bio,
-      img: d.imageUrl || '',
-      tags: JSON.parse(d.tags || '[]'),
-    }));
+    return rows.map(d => {
+      let tags = [];
+      try { tags = JSON.parse(d.tags || '[]'); } catch { tags = []; }
+      return { name: d.name, specialty: d.specialty, bio: d.bio, img: d.imageUrl || '', tags };
+    });
   } catch {
     return [];
   }

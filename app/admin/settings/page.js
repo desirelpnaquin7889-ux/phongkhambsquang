@@ -162,7 +162,7 @@ export default function SettingsPage() {
   // Load settings
   useEffect(() => {
     fetch('/api/admin/settings')
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(data => { setOriginal(data); setValues(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
