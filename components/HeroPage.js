@@ -177,30 +177,31 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
             src={heroImage}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover object-top md:object-center"
             style={{ zIndex: 0 }}
           />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right,rgba(0,0,0,.72),rgba(0,0,0,.52),rgba(0,0,0,.28))', zIndex: 1 }} />
+          {/* Gradient — desktop: horizontal; mobile: bottom-up darker */}
+          <div className="absolute inset-0 hidden md:block" style={{ background: 'linear-gradient(to right,rgba(0,0,0,.72),rgba(0,0,0,.52),rgba(0,0,0,.28))', zIndex: 1 }} />
+          <div className="absolute inset-0 md:hidden" style={{ background: 'linear-gradient(to top,rgba(0,0,0,.90) 0%,rgba(0,0,0,.65) 45%,rgba(0,0,0,.25) 100%)', zIndex: 1 }} />
 
-          <div className="relative flex-1 flex items-center" style={{ zIndex: 2 }}>
-            <div className="max-w-7xl mx-auto px-5 lg:px-8 w-full pt-28 pb-10">
-              <div className="max-w-[600px] hero-el">
-                <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-7 border border-white/25" style={{ background: 'rgba(255,255,255,.10)', backdropFilter: 'blur(12px)' }}>
+          <div className="relative flex-1 flex items-end md:items-center pb-2 md:pb-0" style={{ zIndex: 2 }}>
+            <div className="max-w-7xl mx-auto px-5 lg:px-8 w-full pt-24 md:pt-28 pb-8 md:pb-10">
+              <div className="md:max-w-[600px] hero-el">
+                <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-5 md:mb-7 border border-white/25" style={{ background: 'rgba(255,255,255,.10)', backdropFilter: 'blur(12px)' }}>
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
                   <span className="text-white/90 text-xs font-medium tracking-widest uppercase">Phòng khám chuyên khoa uy tín</span>
                 </div>
-                <h1 className="font-serif text-[2.5rem] md:text-[3.2rem] lg:text-[3.6rem] font-bold text-white leading-[1.18] mb-6">
+                <h1 className="font-serif text-[1.75rem] md:text-[3.2rem] lg:text-[3.6rem] font-bold text-white leading-tight md:leading-[1.18] mb-4 md:mb-6">
                   {homeTitle}
                 </h1>
-                <p className="text-white/75 text-lg leading-relaxed mb-10 max-w-[480px]">
+                <p className="text-white/75 text-[15px] md:text-lg leading-relaxed mb-7 md:mb-10 md:max-w-[480px]">
                   {homeSubtitle}
                 </p>
-                <div className="flex flex-wrap gap-4">
-                  <button onClick={() => scrollTo('booking')} className="inline-flex items-center gap-2 text-white font-semibold rounded-full px-8 py-3.5 transition-colors duration-300" style={{ background: '#0D9488' }}>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button onClick={() => scrollTo('booking')} className="flex items-center justify-center gap-2 text-white font-semibold rounded-full px-8 py-3.5 transition-colors duration-300" style={{ background: '#0D9488' }}>
                     <i className="ri-calendar-check-line"></i> Đặt lịch khám
                   </button>
-                  <button onClick={() => scrollTo('services')} className="inline-flex items-center gap-2 text-white font-semibold rounded-full px-8 py-3.5 transition-all duration-300 border border-white/30 hover:bg-white/20">
+                  <button onClick={() => scrollTo('services')} className="flex items-center justify-center gap-2 text-white font-semibold rounded-full px-8 py-3.5 transition-all duration-300 border border-white/30 hover:bg-white/20">
                     <i className="ri-stethoscope-line"></i> Xem dịch vụ
                   </button>
                 </div>
@@ -213,9 +214,14 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
             <div className="max-w-7xl mx-auto px-5 lg:px-8">
               <div className="grid grid-cols-2 md:grid-cols-4">
                 {[['20+','Năm chuyên môn'],['8+','Bác sĩ chuyên khoa'],['30K+','Ca siêu âm / năm'],['98%','Bệnh nhân hài lòng']].map(([val,lab],i) => (
-                  <div key={lab} className={`py-6 px-8 text-center hero-el ${i > 0 ? 'border-l border-white/15' : ''}`}>
-                    <div className="text-3xl font-bold text-white">{val}</div>
-                    <div className="text-white/60 text-xs mt-1 uppercase tracking-wider">{lab}</div>
+                  <div key={lab} className={[
+                    'py-4 md:py-6 px-3 sm:px-5 md:px-8 text-center hero-el',
+                    i % 2 === 1 ? 'border-l border-white/15' : '',
+                    i >= 2 ? 'border-t border-white/10 md:border-t-0' : '',
+                    i === 2 ? 'md:border-l md:border-white/15' : '',
+                  ].filter(Boolean).join(' ')}>
+                    <div className="text-2xl md:text-3xl font-bold text-white">{val}</div>
+                    <div className="text-white/60 text-[10px] md:text-xs mt-0.5 md:mt-1 uppercase tracking-wider leading-snug">{lab}</div>
                   </div>
                 ))}
               </div>
