@@ -19,15 +19,19 @@ export async function POST(request) {
   const agg = await prisma.service.aggregate({ _max: { order: true } });
   const order = (agg._max.order ?? 0) + 1;
 
-  const service = await prisma.service.create({
-    data: {
-      name: name.trim(),
-      description: description?.trim() || '',
-      icon: icon?.trim() || 'ri-service-line',
-      active: active !== false,
-      order,
-    },
-  });
-
-  return NextResponse.json(service, { status: 201 });
+  try {
+    const service = await prisma.service.create({
+      data: {
+        name: name.trim(),
+        description: description?.trim() || '',
+        icon: icon?.trim() || 'ri-service-line',
+        active: active !== false,
+        order,
+      },
+    });
+    return NextResponse.json(service, { status: 201 });
+  } catch (err) {
+    console.error('Create service error:', err);
+    return NextResponse.json({ error: 'Lỗi tạo dịch vụ' }, { status: 500 });
+  }
 }

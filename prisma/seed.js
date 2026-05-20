@@ -1,7 +1,12 @@
+require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
+const { PrismaPg } = require('@prisma/adapter-pg');
+const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 
-const prisma = new PrismaClient();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // Admin user
@@ -46,6 +51,11 @@ async function main() {
       ],
     });
   }
+
+  // Reset sequences so next INSERT uses correct autoincrement
+  await prisma.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('"doctors"', 'id'), COALESCE(MAX(id), 0) + 1, false) FROM "doctors"`);
+  await prisma.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('"services"', 'id'), COALESCE(MAX(id), 0) + 1, false) FROM "services"`);
+  await prisma.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('"appointments"', 'id'), COALESCE(MAX(id), 0) + 1, false) FROM "appointments"`);
 
   console.log('✓ Seed completed');
 }

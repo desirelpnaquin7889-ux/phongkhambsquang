@@ -21,17 +21,21 @@ export async function POST(request) {
   const agg = await prisma.doctor.aggregate({ _max: { order: true } });
   const order = (agg._max.order ?? 0) + 1;
 
-  const doctor = await prisma.doctor.create({
-    data: {
-      name,
-      specialty,
-      credentials: credentials || '',
-      bio: bio || '',
-      imageUrl: imageUrl || null,
-      tags: JSON.stringify(Array.isArray(tags) ? tags : []),
-      order,
-    },
-  });
-
-  return NextResponse.json(doctor, { status: 201 });
+  try {
+    const doctor = await prisma.doctor.create({
+      data: {
+        name,
+        specialty,
+        credentials: credentials || '',
+        bio: bio || '',
+        imageUrl: imageUrl || null,
+        tags: JSON.stringify(Array.isArray(tags) ? tags : []),
+        order,
+      },
+    });
+    return NextResponse.json(doctor, { status: 201 });
+  } catch (err) {
+    console.error('Create doctor error:', err);
+    return NextResponse.json({ error: 'Lỗi tạo bác sĩ' }, { status: 500 });
+  }
 }
