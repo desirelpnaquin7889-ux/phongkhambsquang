@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
             </svg>
           </div>
           <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
-          <p className="text-gray-500 text-sm mt-1">Phòng Khám An Bình</p>
+          <p className="text-gray-500 text-sm mt-1">Quản lý phòng khám</p>
         </div>
 
         {/* Form */}
@@ -83,9 +83,6 @@ export default function AdminLoginPage() {
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
-        <p className="text-center text-xs text-gray-400 mt-6">
-          Tài khoản mặc định: admin / admin123
-        </p>
       </div>
     </div>
   );
