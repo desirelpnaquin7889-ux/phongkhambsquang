@@ -5,6 +5,7 @@ import { requireAuth } from '@/lib/admin-auth';
 
 const ALLOWED_KEYS = new Set([
   'site_name', 'site_tagline', 'home_title', 'home_subtitle', 'hero_image',
+  'home_title_size', 'home_subtitle_size',
   'contact_address', 'contact_phone', 'contact_email',
   'contact_hours_weekday', 'contact_hours_sunday',
   'contact_open_time', 'contact_close_time',

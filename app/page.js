@@ -34,6 +34,15 @@ async function getDoctors() {
   }
 }
 
+async function getTestimonials() {
+  try {
+    const rows = await prisma.testimonial.findMany({ where: { active: true }, orderBy: [{ order: 'asc' }, { createdAt: 'asc' }] });
+    return rows.map(t => ({ name: t.name, role: t.role, initials: t.initials, stars: t.stars, text: t.text }));
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata() {
   const s = await getSettings();
   return {
@@ -43,6 +52,6 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [settings, services, doctors] = await Promise.all([getSettings(), getServices(), getDoctors()]);
-  return <HeroPage settings={settings} services={services} doctors={doctors} />;
+  const [settings, services, doctors, testimonials] = await Promise.all([getSettings(), getServices(), getDoctors(), getTestimonials()]);
+  return <HeroPage settings={settings} services={services} doctors={doctors} testimonials={testimonials} />;
 }

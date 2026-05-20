@@ -19,6 +19,42 @@ function validate(values) {
   return errors;
 }
 
+// ── Font size helpers ─────────────────────────────────────────────────────────
+const FONT_SIZE_STEPS = [
+  { value: '1', label: 'Rất nhỏ',        previewCls: 'text-xs' },
+  { value: '2', label: 'Nhỏ',            previewCls: 'text-sm' },
+  { value: '3', label: 'Vừa (mặc định)', previewCls: 'text-base' },
+  { value: '4', label: 'Lớn',            previewCls: 'text-lg' },
+  { value: '5', label: 'Rất lớn',        previewCls: 'text-xl' },
+];
+
+function FontSizeControl({ label, settingKey, values, handleChange }) {
+  const cur = values[settingKey] || '3';
+  const idx = FONT_SIZE_STEPS.findIndex(s => s.value === cur);
+  const step = FONT_SIZE_STEPS[idx] || FONT_SIZE_STEPS[2];
+  const dec = () => idx > 0 && handleChange(settingKey, FONT_SIZE_STEPS[idx - 1].value);
+  const inc = () => idx < FONT_SIZE_STEPS.length - 1 && handleChange(settingKey, FONT_SIZE_STEPS[idx + 1].value);
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <div className="flex items-center gap-3">
+        <button type="button" onClick={dec} disabled={idx === 0}
+          className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:border-teal-300 hover:text-teal-600 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+          <i className="ri-subtract-line text-base"></i>
+        </button>
+        <div className="flex-1 bg-gray-50 rounded-xl px-4 py-2.5 flex items-center justify-between">
+          <span className="text-gray-500 text-xs w-28">{step.label}</span>
+          <span className={`text-gray-800 font-semibold ${step.previewCls} truncate max-w-[180px]`}>Aa — Tiêu đề</span>
+        </div>
+        <button type="button" onClick={inc} disabled={idx === FONT_SIZE_STEPS.length - 1}
+          className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:border-teal-300 hover:text-teal-600 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+          <i className="ri-add-line text-base"></i>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Field sections config ────────────────────────────────────────────────────
 const SECTIONS = [
   {
@@ -27,7 +63,9 @@ const SECTIONS = [
       { key: 'site_name',    label: 'Tên phòng khám',         placeholder: 'An Bình',                             type: 'text' },
       { key: 'site_tagline', label: 'Chuyên khoa / Tagline', placeholder: 'Phòng Khám Siêu Âm & Ung Bướu',     type: 'text' },
       { key: 'home_title',   label: 'Tiêu đề trang chủ',    placeholder: 'Chẩn đoán chính xác, Tầm soát sớm...', type: 'text' },
+      { key: 'home_title_size', label: 'Cỡ chữ tiêu đề', type: 'fontsize' },
       { key: 'home_subtitle', label: 'Mô tả trang chủ',   placeholder: 'Đội ngũ bác sĩ chuyên khoa...',           type: 'textarea' },
+      { key: 'home_subtitle_size', label: 'Cỡ chữ mô tả', type: 'fontsize' },
     ],
   },
   {
@@ -310,6 +348,12 @@ export default function SettingsPage() {
             </div>
             <div className="px-6 py-5 space-y-4">
               {section.fields.map(field => {
+                if (field.type === 'fontsize') {
+                  return (
+                    <FontSizeControl key={field.key} label={field.label} settingKey={field.key}
+                      values={values} handleChange={handleChange} />
+                  );
+                }
                 const hasErr = !!errors[field.key];
                 const fieldCls = inputCls + (hasErr ? ' !border-red-300 focus:!border-red-400 focus:!ring-red-100' : '');
                 return (

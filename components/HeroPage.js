@@ -23,9 +23,25 @@ const TESTIMONIALS = [
   { name: 'Anh Phạm Minh Hoàng', role: 'Bệnh nhân tầm soát định kỳ', initials: 'MH', stars: 4, text: '"Phát hiện sớm khối u nhờ tầm soát định kỳ tại đây. Cảm ơn đội ngũ bác sĩ. Dịch vụ đáng tin cậy, tôi luôn giới thiệu cho người thân."' },
 ];
 
-export default function HeroPage({ settings = {}, services: servicesProp = [], doctors: doctorsProp = [] }) {
-  const SERVICES_DATA = servicesProp.length > 0 ? servicesProp : SERVICES;
-  const DOCTORS_DATA  = doctorsProp.length  > 0 ? doctorsProp  : DOCTORS;
+const TITLE_SIZE_CLS = {
+  '1': 'text-[1.35rem] md:text-[2.4rem] lg:text-[2.8rem]',
+  '2': 'text-[1.55rem] md:text-[2.8rem] lg:text-[3.2rem]',
+  '3': 'text-[1.75rem] md:text-[3.2rem] lg:text-[3.6rem]',
+  '4': 'text-[2rem]    md:text-[3.7rem] lg:text-[4.1rem]',
+  '5': 'text-[2.2rem]  md:text-[4.1rem] lg:text-[4.6rem]',
+};
+const SUBTITLE_SIZE_CLS = {
+  '1': 'text-xs md:text-sm',
+  '2': 'text-sm md:text-base',
+  '3': 'text-[15px] md:text-lg',
+  '4': 'text-base md:text-xl',
+  '5': 'text-lg md:text-2xl',
+};
+
+export default function HeroPage({ settings = {}, services: servicesProp = [], doctors: doctorsProp = [], testimonials: testimonialsProp = [] }) {
+  const SERVICES_DATA     = servicesProp.length > 0 ? servicesProp : SERVICES;
+  const DOCTORS_DATA      = doctorsProp.length  > 0 ? doctorsProp  : DOCTORS;
+  const TESTIMONIALS_DATA = testimonialsProp.length > 0 ? testimonialsProp : TESTIMONIALS;
 
   const s = settings;
   const siteName      = s.site_name      || 'An Bình';
@@ -42,6 +58,8 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
   const mapsEmbed     = s.contact_maps_embed    || '';
   const siteTagline   = s.site_tagline          || 'Phòng Khám Siêu Âm';
   const heroImage     = s.hero_image            || 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=1920&q=85';
+  const titleSizeCls    = TITLE_SIZE_CLS[s.home_title_size]    || TITLE_SIZE_CLS['3'];
+  const subtitleSizeCls = SUBTITLE_SIZE_CLS[s.home_subtitle_size] || SUBTITLE_SIZE_CLS['3'];
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -101,7 +119,7 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
   }, []);
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % TESTIMONIALS.length), 5500);
+    const t = setInterval(() => setSlide(s => (s + 1) % TESTIMONIALS_DATA.length), 5500);
     return () => clearInterval(t);
   }, []);
 
@@ -191,10 +209,10 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
                   <span className="text-white/90 text-xs font-medium tracking-widest uppercase">Phòng khám chuyên khoa uy tín</span>
                 </div>
-                <h1 className="font-serif text-[1.75rem] md:text-[3.2rem] lg:text-[3.6rem] font-bold text-white leading-tight md:leading-[1.18] mb-4 md:mb-6">
+                <h1 className={`font-serif ${titleSizeCls} font-bold text-white leading-tight md:leading-[1.18] mb-4 md:mb-6`}>
                   {homeTitle}
                 </h1>
-                <p className="text-white/75 text-[15px] md:text-lg leading-relaxed mb-7 md:mb-10 md:max-w-[480px]">
+                <p className={`text-white/75 ${subtitleSizeCls} leading-relaxed mb-7 md:mb-10 md:max-w-[480px]`}>
                   {homeSubtitle}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -300,21 +318,21 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
             <div className="max-w-2xl mx-auto will-anim">
               <div className="bg-gray-50 rounded-2xl p-10 text-center">
                 <div className="flex justify-center gap-0.5 mb-5 text-yellow-400 text-lg">
-                  {Array.from({ length: TESTIMONIALS[slide].stars }).map((_, i) => <i key={i} className="ri-star-fill"></i>)}
+                  {Array.from({ length: TESTIMONIALS_DATA[slide].stars }).map((_, i) => <i key={i} className="ri-star-fill"></i>)}
                 </div>
-                <p className="text-gray-600 text-[1.05rem] leading-relaxed italic mb-8">{TESTIMONIALS[slide].text}</p>
+                <p className="text-gray-600 text-[1.05rem] leading-relaxed italic mb-8">{TESTIMONIALS_DATA[slide].text}</p>
                 <div className="flex items-center justify-center gap-3">
                   <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-bold text-sm" style={{ background: '#F0FDFA', color: '#0D9488' }}>
-                    {TESTIMONIALS[slide].initials}
+                    {TESTIMONIALS_DATA[slide].initials}
                   </div>
                   <div className="text-left">
-                    <div className="font-semibold text-gray-900 text-sm">{TESTIMONIALS[slide].name}</div>
-                    <div className="text-gray-400 text-xs mt-0.5">{TESTIMONIALS[slide].role}</div>
+                    <div className="font-semibold text-gray-900 text-sm">{TESTIMONIALS_DATA[slide].name}</div>
+                    <div className="text-gray-400 text-xs mt-0.5">{TESTIMONIALS_DATA[slide].role}</div>
                   </div>
                 </div>
               </div>
               <div className="flex justify-center gap-2 mt-7">
-                {TESTIMONIALS.map((_, i) => (
+                {TESTIMONIALS_DATA.map((_, i) => (
                   <button key={i} onClick={() => setSlide(i)}
                     className={`h-2 rounded-full transition-all duration-300 ${i === slide ? 'w-8' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
                     style={i === slide ? { background: '#0D9488' } : {}} />

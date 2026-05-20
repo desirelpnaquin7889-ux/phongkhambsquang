@@ -8,6 +8,7 @@ const nav = [
   { href: '/admin/appointments', label: 'Lịch hẹn',    icon: 'ri-calendar-check-line' },
   { href: '/admin/services',     label: 'Dịch vụ',     icon: 'ri-heart-pulse-line' },
   { href: '/admin/doctors',      label: 'Bác sĩ',      icon: 'ri-user-heart-line' },
+  { href: '/admin/testimonials', label: 'Phản hồi',    icon: 'ri-chat-quote-line' },
   { href: '/admin/contacts',     label: 'Liên hệ',     icon: 'ri-mail-line' },
   { href: '/admin/settings',     label: 'Cài đặt',     icon: 'ri-settings-3-line' },
 ];

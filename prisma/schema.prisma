@@ -73,3 +73,18 @@ model ContactMessage {
 
   @@map("contact_messages")
 }
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  initials  String
+  stars     Int      @default(5)
+  text      String
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
