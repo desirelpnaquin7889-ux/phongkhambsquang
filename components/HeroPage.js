@@ -173,11 +173,19 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
 
       <main>
         {/* ── HERO ── */}
-        <section id="hero" className="min-h-screen flex flex-col" style={{
-          backgroundImage: `linear-gradient(to right,rgba(0,0,0,.72),rgba(0,0,0,.52),rgba(0,0,0,.30)),url(${heroImage})`,
-          backgroundSize: 'cover', backgroundPosition: 'center',
-        }}>
-          <div className="flex-1 flex items-center">
+        <section id="hero" className="relative min-h-screen flex flex-col overflow-hidden" style={{ background: '#0a1f1e' }}>
+          {/* Background image */}
+          <img
+            src={heroImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ zIndex: 0 }}
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right,rgba(0,0,0,.72),rgba(0,0,0,.52),rgba(0,0,0,.28))', zIndex: 1 }} />
+
+          <div className="relative flex-1 flex items-center" style={{ zIndex: 2 }}>
             <div className="max-w-7xl mx-auto px-5 lg:px-8 w-full pt-28 pb-10">
               <div className="max-w-[600px] hero-el">
                 <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-7 border border-white/25" style={{ background: 'rgba(255,255,255,.10)', backdropFilter: 'blur(12px)' }}>
@@ -203,7 +211,7 @@ export default function HeroPage({ settings = {}, services: servicesProp = [], d
           </div>
 
           {/* Stats */}
-          <div className="border-t border-white/10" style={{ background: 'rgba(0,0,0,.28)', backdropFilter: 'blur(4px)' }}>
+          <div className="relative border-t border-white/10" style={{ background: 'rgba(0,0,0,.28)', backdropFilter: 'blur(4px)', zIndex: 2 }}>
             <div className="max-w-7xl mx-auto px-5 lg:px-8">
               <div className="grid grid-cols-2 md:grid-cols-4">
                 {[['20+','Năm chuyên môn'],['8+','Bác sĩ chuyên khoa'],['30K+','Ca siêu âm / năm'],['98%','Bệnh nhân hài lòng']].map(([val,lab],i) => (
